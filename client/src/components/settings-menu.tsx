@@ -14,38 +14,40 @@ export default function SettingsMenu() {
   };
 
   return (
-    <div className="relative">
+    <>
       {/* Hamburger Menu Button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={toggleMenu}
-        className="text-gold hover:text-white hover:bg-gold/20 transition-colors p-2"
-      >
-        <div className="flex flex-col space-y-1">
-          <div className={`w-5 h-0.5 bg-current transition-transform duration-200 ${
-            isOpen ? 'rotate-45 translate-y-1.5' : ''
-          }`}></div>
-          <div className={`w-5 h-0.5 bg-current transition-opacity duration-200 ${
-            isOpen ? 'opacity-0' : ''
-          }`}></div>
-          <div className={`w-5 h-0.5 bg-current transition-transform duration-200 ${
-            isOpen ? '-rotate-45 -translate-y-1.5' : ''
-          }`}></div>
-        </div>
-      </Button>
+      <div className="relative">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleMenu}
+          className="text-gold hover:text-white hover:bg-gold/20 transition-colors p-2"
+        >
+          <div className="flex flex-col space-y-1">
+            <div className={`w-5 h-0.5 bg-current transition-transform duration-200 ${
+              isOpen ? 'rotate-45 translate-y-1.5' : ''
+            }`}></div>
+            <div className={`w-5 h-0.5 bg-current transition-opacity duration-200 ${
+              isOpen ? 'opacity-0' : ''
+            }`}></div>
+            <div className={`w-5 h-0.5 bg-current transition-transform duration-200 ${
+              isOpen ? '-rotate-45 -translate-y-1.5' : ''
+            }`}></div>
+          </div>
+        </Button>
+      </div>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu Portal */}
       {isOpen && (
-        <>
+        <div className="fixed inset-0 z-[9999]">
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 z-[9998]"
+            className="absolute inset-0"
             onClick={() => setIsOpen(false)}
           />
           
           {/* Menu Content */}
-          <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-glass rounded-lg shadow-xl border border-gold/20 z-[9999]">
+          <div className="absolute top-20 right-4 w-48 bg-white/95 backdrop-blur-glass rounded-lg shadow-xl border border-gold/20">
             <div className="p-4">
               <h3 className="text-sm font-semibold text-slate-800 mb-3 border-b border-slate-200 pb-2">
                 {t('settings.language')}
@@ -82,8 +84,8 @@ export default function SettingsMenu() {
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }
