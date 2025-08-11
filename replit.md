@@ -7,6 +7,7 @@ This is a full-stack I Ching Oracle web application that provides users with anc
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Language support: Added bilingual functionality with English and Thai translations while preserving Chinese hexagram names.
 
 ## System Architecture
 
@@ -17,6 +18,7 @@ Preferred communication style: Simple, everyday language.
 - **State Management**: React Query (TanStack Query) for server state management with custom query client configuration
 - **Routing**: Wouter for lightweight client-side routing
 - **Form Handling**: React Hook Form with Zod validation for type-safe form management
+- **Internationalization**: React Context-based language system supporting English and Thai with preserved Chinese hexagram names
 - **Design System**: Custom design tokens using CSS variables, Inter and Crimson Text fonts, with a neutral color palette
 
 ### Backend Architecture

@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { apiRequest } from "@/lib/queryClient";
 import { IChingConsultation, ConsultationResult } from "@/types/iching";
 import { ichingConsultationSchema } from "@shared/schema";
@@ -19,6 +20,7 @@ interface ConsultationFormProps {
 
 export default function ConsultationForm({ onConsultationComplete }: ConsultationFormProps) {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [numberOfDraws, setNumberOfDraws] = useState([3]);
 
   const form = useForm<IChingConsultation>({
@@ -37,16 +39,17 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
       return response.json();
     },
     onSuccess: (result: ConsultationResult) => {
+      const drawText = result.numberOfDraws > 1 ? t('results.draws') : t('results.draw');
       toast({
-        title: "Oracle Consulted",
-        description: `Your ${result.numberOfDraws} reading${result.numberOfDraws > 1 ? 's' : ''} have been cast.`,
+        title: t('toast.consultationSuccess'),
+        description: `${result.numberOfDraws} ${drawText} ${t('toast.consultationSuccessDesc')}`,
       });
       onConsultationComplete(result);
     },
     onError: (error: any) => {
       toast({
-        title: "Consultation Failed",
-        description: error.message || "Unable to consult the oracle. Please try again.",
+        title: t('toast.consultationError'),
+        description: error.message || t('toast.consultationErrorDesc'),
         variant: "destructive",
       });
     },
@@ -64,7 +67,7 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
       <CardContent className="p-8">
         <h2 className="text-3xl font-serif font-semibold text-slate-800 mb-6 text-center">
           <i className="fas fa-scroll text-gold mr-3"></i>
-          Consult the Oracle
+          {t('form.title')}
         </h2>
         
         <Form {...form}>
@@ -76,11 +79,11 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-slate-700">
-                    Your Question <span className="text-red-500">*</span>
+                    {t('form.question')} <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="What wisdom do you seek from the I Ching? Be specific and sincere in your inquiry..."
+                      placeholder={t('form.questionPlaceholder')}
                       className="resize-none h-24"
                       {...field}
                     />
@@ -98,7 +101,7 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-slate-700">
-                      Consultation Date
+                      {t('form.date')}
                     </FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
@@ -114,7 +117,7 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-slate-700">
-                      Consultation Time
+                      {t('form.time')}
                     </FormLabel>
                     <FormControl>
                       <Input type="time" {...field} />
@@ -128,7 +131,7 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
             {/* Number of Draws */}
             <div>
               <FormLabel className="text-sm font-medium text-slate-700 mb-2 block">
-                Number of Draws (1-100)
+                {t('form.numberOfDraws')}
               </FormLabel>
               <div className="flex items-center space-x-4">
                 <Slider
@@ -144,7 +147,7 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-1">
-                Multiple draws provide deeper insight into your question
+                {t('form.numberOfDrawsHelp')}
               </p>
             </div>
 
@@ -157,12 +160,12 @@ export default function ConsultationForm({ onConsultationComplete }: Consultatio
               {consultationMutation.isPending ? (
                 <>
                   <i className="fas fa-spinner fa-spin mr-2"></i>
-                  Consulting Oracle...
+                  {t('form.submitting')}
                 </>
               ) : (
                 <>
                   <i className="fas fa-magic mr-2"></i>
-                  Cast the Hexagrams
+                  {t('form.submit')}
                 </>
               )}
             </Button>
