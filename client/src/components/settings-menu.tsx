@@ -40,12 +40,12 @@ export default function SettingsMenu() {
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-[9998]"
             onClick={() => setIsOpen(false)}
           />
           
           {/* Menu Content */}
-          <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-glass rounded-lg shadow-xl border border-gold/20 z-50">
+          <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-glass rounded-lg shadow-xl border border-gold/20 z-[9999]">
             <div className="p-4">
               <h3 className="text-sm font-semibold text-slate-800 mb-3 border-b border-slate-200 pb-2">
                 {t('settings.language')}
