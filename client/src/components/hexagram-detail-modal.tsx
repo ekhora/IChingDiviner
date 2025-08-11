@@ -8,10 +8,10 @@ interface HexagramDetailModalProps {
 }
 
 export default function HexagramDetailModal({ hexagram, onClose }: HexagramDetailModalProps) {
-  const getLineAnalysis = (lineIndex: number) => {
-    const lineNumber = lineIndex + 1;
-    const animal = ZODIAC_ANIMALS[lineIndex % 12];
-    const element = FIVE_ELEMENTS[lineIndex % 5];
+  const getLineAnalysis = (arrayIndex: number) => {
+    const lineNumber = 6 - arrayIndex; // Convert array index to traditional line number
+    const animal = ZODIAC_ANIMALS[arrayIndex % 12];
+    const element = FIVE_ELEMENTS[arrayIndex % 5];
     
     return {
       lineNumber,
@@ -43,9 +43,10 @@ export default function HexagramDetailModal({ hexagram, onClose }: HexagramDetai
             {/* Hexagram Visualization */}
             <div className="text-center">
               <div className="inline-flex flex-col p-4 bg-slate-50 rounded-lg">
-                <HexagramVisualization lines={hexagram.lines} size="lg" />
+                <HexagramVisualization lines={hexagram.lines} size="lg" showLineNumbers={true} />
               </div>
               <p className="text-sm text-slate-500 mt-2">Hexagram #{hexagram.number}</p>
+              <p className="text-xs text-slate-400 mt-1">Line 6 (top) → Line 1 (bottom)</p>
             </div>
 
             {/* Traditional Meaning */}
@@ -68,16 +69,17 @@ export default function HexagramDetailModal({ hexagram, onClose }: HexagramDetai
 
             {/* Line Analysis */}
             <div>
-              <h4 className="font-semibold text-slate-800 mb-3">Line Analysis</h4>
+              <h4 className="font-semibold text-slate-800 mb-3">Line Analysis (Traditional Counting: Line 6 = Top, Line 1 = Bottom)</h4>
               <div className="space-y-3">
                 {hexagram.lines.map((isYang: boolean, index: number) => {
-                  const analysis = getLineAnalysis(5 - index); // Top to bottom
+                  const lineNumber = 6 - index; // Convert array index to traditional line number
+                  const analysis = getLineAnalysis(index);
                   return (
                     <div key={index} className={`border-l-4 pl-4 ${isYang ? 'border-gold' : 'border-blue-300'}`}>
                       <p className="font-medium text-sm">
-                        Line {analysis.lineNumber} ({isYang ? 'Yang' : 'Yin'}): {analysis.animal} - {analysis.element}
+                        Line {lineNumber} ({isYang ? 'Yang' : 'Yin'}): {analysis.animal} - {analysis.element}
                       </p>
-                      <p className="text-xs text-slate-600">{analysis.description}</p>
+                      <p className="text-xs text-slate-600">Line {lineNumber} represents {analysis.animal} energy with {analysis.element} element influence.</p>
                     </div>
                   );
                 })}
@@ -88,8 +90,8 @@ export default function HexagramDetailModal({ hexagram, onClose }: HexagramDetai
             <div>
               <h4 className="font-semibold text-slate-800 mb-3">Elemental Associations</h4>
               <div className="grid grid-cols-2 gap-3 text-sm">
-                {hexagram.lines.map((_, index: number) => {
-                  const lineNum = 6 - index; // Top to bottom
+                {hexagram.lines.map((line: boolean, index: number) => {
+                  const lineNum = 6 - index; // Top to bottom (Line 6 at top, Line 1 at bottom)
                   const analysis = getLineAnalysis(index);
                   const colorClasses = [
                     'bg-red-50', 'bg-green-50', 'bg-blue-50', 

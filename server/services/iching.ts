@@ -39,9 +39,10 @@ export class IChingService {
   calculateResultingHexagram(primary: typeof ALL_HEXAGRAMS[0], changingLines: number[]): typeof ALL_HEXAGRAMS[0] {
     const newLines = [...primary.lines];
     
-    // Apply changing lines (convert 1-based to 0-based index)
+    // Apply changing lines (convert traditional line numbering to array index)
+    // Line 1 = bottom = index 5, Line 6 = top = index 0
     changingLines.forEach(lineNum => {
-      const index = lineNum - 1;
+      const index = 6 - lineNum; // Convert traditional line number to array index
       newLines[index] = !newLines[index]; // flip the line
     });
     
@@ -54,7 +55,7 @@ export class IChingService {
   // Assign zodiac animals and elements to each line
   assignLineAttributes(hexagram: typeof ALL_HEXAGRAMS[0], consultationDate: string) {
     return hexagram.lines.map((_, index) => ({
-      line: index + 1,
+      line: 6 - index, // Convert array index to traditional line number (top to bottom: 6,5,4,3,2,1)
       animal: ZODIAC_ANIMALS[index % 12],
       element: FIVE_ELEMENTS[index % 5]
     }));
@@ -138,7 +139,7 @@ export class IChingService {
     }
 
     const hexagramNames = results.map(r => r.primaryHexagram.name);
-    const uniqueHexagrams = [...new Set(hexagramNames)];
+    const uniqueHexagrams = Array.from(new Set(hexagramNames));
     
     let summary = `Your ${results.length} readings reveal `;
     
