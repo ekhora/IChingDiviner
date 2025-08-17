@@ -1,0 +1,543 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching Oracle - Ancient Wisdom, Modern Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#1a237e',
+                    gold: '#ffd700',
+                    slate: '#2c3e50',
+                    mystic: '#4a148c'
+                },
+                fontFamily: {
+                    'serif': ['Crimson Text', 'serif'],
+                    'sans': ['Inter', 'sans-serif']
+                }
+            }
+        }
+    };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-primary to-mystic min-h-screen">
+    
+    <!-- @COMPONENT: Header -->
+    <header class="bg-slate-800/30 backdrop-blur-sm border-b border-gold/20">
+        <div class="max-w-6xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-gold to-yellow-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-yin-yang text-primary text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-serif font-semibold text-white">I Ching Oracle</h1>
+                        <p class="text-gold/80 text-sm">Ancient Wisdom for Modern Times</p>
+                    </div>
+                </div>
+                <button class="text-gold hover:text-white transition-colors">
+                    <i class="fas fa-question-circle text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- @COMPONENT: ConsultationForm -->
+        <div class="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8 mb-8">
+            <h2 class="text-3xl font-serif font-semibold text-slate-800 mb-6 text-center">
+                <i class="fas fa-scroll text-gold mr-3"></i>
+                Consult the Oracle
+            </h2>
+            
+            <form class="space-y-6" data-event="submit:handleConsultation">
+                <!-- Question Input -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Your Question <span class="text-red-500">*</span>
+                    </label>
+                    <textarea 
+                        data-bind="question"
+                        placeholder="What wisdom do you seek from the I Ching? Be specific and sincere in your inquiry..."
+                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none h-24"
+                        data-mock="true"
+                    ></textarea>
+                </div>
+
+                <!-- Date and Time -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Consultation Date
+                        </label>
+                        <input 
+                            type="date" 
+                            data-bind="consultationDate"
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                            data-mock="true"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Consultation Time
+                        </label>
+                        <input 
+                            type="time" 
+                            data-bind="consultationTime"
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                            data-mock="true"
+                        >
+                    </div>
+                </div>
+
+                <!-- Number of Draws -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Number of Draws (1-100)
+                    </label>
+                    <div class="flex items-center space-x-4">
+                        <input 
+                            type="range" 
+                            min="1" 
+                            max="100" 
+                            data-bind="numberOfDraws"
+                            class="flex-1 accent-primary"
+                            data-mock="true"
+                        >
+                        <span class="w-16 px-3 py-2 bg-slate-100 rounded text-center font-medium" data-bind="numberOfDraws">3</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Multiple draws provide deeper insight into your question</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-primary to-mystic text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                    data-event="click:performReading"
+                >
+                    <i class="fas fa-magic mr-2"></i>
+                    Cast the Hexagrams
+                </button>
+            </form>
+        </div>
+        <!-- @END_COMPONENT: ConsultationForm -->
+
+        <!-- @COMPONENT: ReadingResults -->
+        <div class="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8" data-mock="true">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-serif font-semibold text-slate-800">
+                    <i class="fas fa-eye text-gold mr-2"></i>
+                    Your Reading Results
+                </h2>
+                <button class="bg-gold text-primary px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 transition-colors">
+                    <i class="fas fa-download mr-2"></i>
+                    Export Reading
+                </button>
+            </div>
+
+            <!-- Current Question Display -->
+            <div class="bg-slate-50 rounded-lg p-4 mb-6">
+                <p class="text-sm text-slate-600 mb-1">Your Question:</p>
+                <p class="text-slate-800 font-medium italic" data-bind="currentQuestion" data-mock="true">
+                    "Should I pursue the new career opportunity that has presented itself?"
+                </p>
+                <p class="text-xs text-slate-500 mt-2">
+                    Consulted on <span data-bind="readingDate" data-mock="true">March 15, 2024 at 2:30 PM</span> • 
+                    <span data-bind="totalDraws" data-mock="true">3</span> draws performed
+                </p>
+            </div>
+
+            <!-- Results Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-primary to-mystic text-white">
+                            <th class="px-4 py-3 text-left text-sm font-semibold">Draw #</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold">Primary Hexagram</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold">Changing Lines</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold">Resulting Hexagram</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold">Strongest Line</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold">Interpretation</th>
+                        </tr>
+                    </thead>
+                    <tbody data-mock="true">
+                        <!-- @MAP: readings.map((reading, index) => ( -->
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-4">
+                                <div class="flex items-center">
+                                    <span class="w-8 h-8 bg-gold rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex flex-col space-y-1">
+                                        <!-- Hexagram visualization -->
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800" data-bind="reading.primaryHexagram.name">乾 (Creative)</p>
+                                        <p class="text-xs text-slate-500" data-bind="reading.primaryHexagram.number">#1</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Line 2</span>
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Line 5</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex flex-col space-y-1">
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">姤 (Coming to Meet)</p>
+                                        <p class="text-xs text-slate-500">#44</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-gold rounded-full"></div>
+                                    <span class="text-sm font-medium">Line 3</span>
+                                    <span class="text-xs text-slate-500">(Tiger/Fire)</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 max-w-xs">
+                                <p class="text-sm text-slate-700 line-clamp-2">
+                                    Strong creative forces are at work. The changing lines suggest careful timing...
+                                </p>
+                                <button class="text-primary text-xs hover:underline mt-1">Read Full</button>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-4">
+                                <div class="flex items-center">
+                                    <span class="w-8 h-8 bg-gold rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex flex-col space-y-1">
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">坤 (Receptive)</p>
+                                        <p class="text-xs text-slate-500">#2</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Line 1</span>
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Line 4</span>
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Line 6</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex flex-col space-y-1">
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">泰 (Peace)</p>
+                                        <p class="text-xs text-slate-500">#11</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-gold rounded-full"></div>
+                                    <span class="text-sm font-medium">Line 6</span>
+                                    <span class="text-xs text-slate-500">(Ox/Earth)</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 max-w-xs">
+                                <p class="text-sm text-slate-700 line-clamp-2">
+                                    Receptive energy indicates patience and yielding bring success...
+                                </p>
+                                <button class="text-primary text-xs hover:underline mt-1">Read Full</button>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-4">
+                                <div class="flex items-center">
+                                    <span class="w-8 h-8 bg-gold rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex flex-col space-y-1">
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">屯 (Difficulty)</p>
+                                        <p class="text-xs text-slate-500">#3</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Line 3</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex flex-col space-y-1">
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-800 rounded"></div>
+                                        <div class="w-8 h-1 bg-slate-300 rounded"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">既濟 (After Completion)</p>
+                                        <p class="text-xs text-slate-500">#63</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-gold rounded-full"></div>
+                                    <span class="text-sm font-medium">Line 2</span>
+                                    <span class="text-xs text-slate-500">(Rabbit/Wood)</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 max-w-xs">
+                                <p class="text-sm text-slate-700 line-clamp-2">
+                                    Initial difficulty transforms into completion through perseverance...
+                                </p>
+                                <button class="text-primary text-xs hover:underline mt-1">Read Full</button>
+                            </td>
+                        </tr>
+                        <!-- @END_MAP )) -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary Insight -->
+            <div class="mt-8 bg-gradient-to-r from-gold/10 to-yellow-50 rounded-xl p-6 border border-gold/20">
+                <h3 class="text-lg font-serif font-semibold text-slate-800 mb-3">
+                    <i class="fas fa-lightbulb text-gold mr-2"></i>
+                    Oracle's Summary
+                </h3>
+                <p class="text-slate-700 leading-relaxed" data-mock="true">
+                    Your three readings reveal a consistent theme of transformation through patience and timing. 
+                    The Creative force in your first reading suggests the opportunity has strong potential, 
+                    while the Receptive in the second emphasizes the need for careful consideration. 
+                    The final reading indicates that initial challenges will lead to successful completion. 
+                    The oracle advises proceeding with the opportunity, but with measured steps and attention to proper timing.
+                </p>
+                
+                <!-- Six Relatives Analysis -->
+                <div class="mt-6">
+                    <h4 class="font-semibold text-slate-800 mb-3">Six Relatives Analysis</h4>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span class="font-medium text-sm">Self (己)</span>
+                            </div>
+                            <p class="text-xs text-slate-600" data-mock="true">Strong in all readings - good foundation</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span class="font-medium text-sm">Officials (官)</span>
+                            </div>
+                            <p class="text-xs text-slate-600" data-mock="true">Favorable aspects for career advancement</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 shadow-sm">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                <span class="font-medium text-sm">Wealth (財)</span>
+                            </div>
+                            <p class="text-xs text-slate-600" data-mock="true">Gradual increase, avoid hasty decisions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ReadingResults -->
+
+        <!-- @COMPONENT: HexagramDetailModal - Hidden by default -->
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50" data-modal="hexagram-detail">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-serif font-semibold text-slate-800">乾 - The Creative</h3>
+                            <button class="text-slate-400 hover:text-slate-600" data-event="click:closeModal">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-6" data-mock="true">
+                            <!-- Hexagram Visualization -->
+                            <div class="text-center">
+                                <div class="inline-flex flex-col space-y-2 p-4 bg-slate-50 rounded-lg">
+                                    <div class="w-16 h-2 bg-slate-800 rounded"></div>
+                                    <div class="w-16 h-2 bg-slate-800 rounded"></div>
+                                    <div class="w-16 h-2 bg-slate-800 rounded"></div>
+                                    <div class="w-16 h-2 bg-slate-800 rounded"></div>
+                                    <div class="w-16 h-2 bg-slate-800 rounded"></div>
+                                    <div class="w-16 h-2 bg-slate-800 rounded"></div>
+                                </div>
+                                <p class="text-sm text-slate-500 mt-2">Hexagram #1</p>
+                            </div>
+
+                            <!-- Traditional Meaning -->
+                            <div>
+                                <h4 class="font-semibold text-slate-800 mb-2">Traditional Meaning</h4>
+                                <p class="text-slate-700">
+                                    The Creative represents pure yang energy, the primal power of heaven. 
+                                    It symbolizes strength, creativity, and the power to bring things into being.
+                                </p>
+                            </div>
+
+                            <!-- Line Analysis -->
+                            <div>
+                                <h4 class="font-semibold text-slate-800 mb-3">Line Analysis</h4>
+                                <div class="space-y-3">
+                                    <div class="border-l-4 border-gold pl-4">
+                                        <p class="font-medium text-sm">Line 6 (Top): Dragon flying in the heavens</p>
+                                        <p class="text-xs text-slate-600">Greatest success, but beware of pride</p>
+                                    </div>
+                                    <div class="border-l-4 border-blue-300 pl-4">
+                                        <p class="font-medium text-sm">Line 5: Flying dragon in the sky</p>
+                                        <p class="text-xs text-slate-600">Perfect timing for action</p>
+                                    </div>
+                                    <!-- Additional lines would be listed here -->
+                                </div>
+                            </div>
+
+                            <!-- Five Elements & Animals for each line -->
+                            <div>
+                                <h4 class="font-semibold text-slate-800 mb-3">Elemental Associations</h4>
+                                <div class="grid grid-cols-2 gap-3 text-sm">
+                                    <div class="bg-red-50 p-3 rounded">
+                                        <span class="font-medium">Line 1:</span> Rat, Water
+                                    </div>
+                                    <div class="bg-green-50 p-3 rounded">
+                                        <span class="font-medium">Line 2:</span> Ox, Earth
+                                    </div>
+                                    <div class="bg-blue-50 p-3 rounded">
+                                        <span class="font-medium">Line 3:</span> Tiger, Wood
+                                    </div>
+                                    <div class="bg-yellow-50 p-3 rounded">
+                                        <span class="font-medium">Line 4:</span> Rabbit, Wood
+                                    </div>
+                                    <div class="bg-orange-50 p-3 rounded">
+                                        <span class="font-medium">Line 5:</span> Dragon, Earth
+                                    </div>
+                                    <div class="bg-purple-50 p-3 rounded">
+                                        <span class="font-medium">Line 6:</span> Snake, Fire
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: HexagramDetailModal -->
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800/30 backdrop-blur-sm border-t border-gold/20 mt-16">
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <div class="text-center text-gold/80">
+                <p class="text-sm">&copy; 2024 I Ching Oracle. Ancient wisdom meets modern technology.</p>
+                <p class="text-xs mt-2">For entertainment and reflection purposes. Seek professional advice for important decisions.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (() => {
+        // TODO: Implement business logic for I Ching calculations
+        // TODO: Add form validation and submission handling
+        // TODO: Implement hexagram generation algorithms
+        // TODO: Add Six Relatives calculations
+        // TODO: Integrate Chinese calendar for energy calculations
+        
+        // Mock interaction handlers for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal handlers
+            const modalTriggers = document.querySelectorAll('[data-event*="openModal"]');
+            const modalClose = document.querySelectorAll('[data-event*="closeModal"]');
+            
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    // TODO: Open appropriate modal with hexagram details
+                });
+            });
+            
+            modalClose.forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    // TODO: Close modal
+                });
+            });
+
+            // Range slider display update
+            const rangeSlider = document.querySelector('input[type="range"]');
+            const rangeDisplay = document.querySelector('span[data-bind="numberOfDraws"]');
+            
+            if (rangeSlider && rangeDisplay) {
+                rangeSlider.addEventListener('input', function() {
+                    rangeDisplay.textContent = this.value;
+                });
+            }
+
+            // Form submission
+            const consultationForm = document.querySelector('form[data-event*="handleConsultation"]');
+            if (consultationForm) {
+                consultationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Validate form and perform I Ching reading
+                    console.log('Form submitted - implement I Ching consultation logic');
+                });
+            }
+        });
+    })();
+    </script>
+
+</body>
+</html>

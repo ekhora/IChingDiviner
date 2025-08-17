@@ -73,11 +73,11 @@ const translations = {
   },
   th: {
     // Header
-    'header.title': 'อนุโลมตราไตรรัถ',
+    'header.title': 'เสี่ยงทายอี้จิง',
     'header.subtitle': 'ภูมิปัญญาโบราณสำหรับยุคใหม่',
     
     // Form
-    'form.title': 'ปรึกษาพระรรษฎา',
+    'form.title': 'ปรึกษาอี้จิง',
     'form.question': 'คำถามของคุณ',
     'form.questionPlaceholder': 'คุณต้องการปัญญาอะไรจากอนุโลมตราไตรรัถ? ให้เจาะจงและจริงใจในการซักถาม...',
     'form.date': 'วันที่ปรึกษา',
