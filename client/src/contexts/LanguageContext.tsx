@@ -84,8 +84,8 @@ const translations = {
     'form.time': 'เวลาปรึกษา',
     'form.numberOfDraws': 'จำนวนการจับ (1-100)',
     'form.numberOfDrawsHelp': 'การจับหลายครั้งให้ความเข้าใจที่ลึกซึ้งยิ่งขึ้นในคำถามของคุณ',
-    'form.submit': 'จับฟืนเฟอง',
-    'form.submitting': 'กำลังปรึกษาพระรรษฎา...',
+    'form.submit': 'เริ่มเสี่ยงทาย',
+    'form.submitting': 'กำลังปรึกษาอี้จิง...',
     
     // Results
     'results.title': 'ผลการอ่าน',
